@@ -1,12 +1,15 @@
 package test.dfa;
 
-import static org.junit.Assert.*;
+//import org.junit.*;
 
 import java.util.Set;
 
-import org.junit.Test;
+
 
 import fa.dfa.DFA;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DFATest {
 	
