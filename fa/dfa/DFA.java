@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * DFA is an implementation that provides all necessary operations to construct
  * a Determinate Finite Automata.
@@ -25,8 +28,13 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean addState(String name) {
-        states.putIfAbsent(name, new DFAState(name));
-        return states.get(name).toString().equals(name);
+        if (states.containsKey(name)) {
+            return false;
+        }
+        states.put(name, new DFAState(name));
+        return true;
+        //states.putIfAbsent(name, new DFAState(name));
+        //return states.get(name).toString().equals(name);
     }
 
     @Override
@@ -49,8 +57,15 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean accepts(String s) {
-        /* TO - DO */
-        return false;
+        DFAState currentState = states.get(startState);
+        for (char c : s.toCharArray()) {
+            if (!sigma.contains(c)) { return false; }
+            String nextState = currentState.transitions.get(c).getName();
+            if (nextState == null) { return false; }
+
+            currentState = states.get(nextState);
+            }
+        return finalStates.contains(currentState.getName());
     }
 
     @Override
@@ -84,16 +99,32 @@ public class DFA implements DFAInterface {
             returnString += chr + " ";
         }
         returnString += "}\n";
-        returnString += "delta\n";
-        returnString += "startState = " + startState + "\n";
-        returnString += "finalStates = {" + String.join(" ", finalStates) + "}\n";
+        returnString += "delta =\n\t";
+        for (Character chr : getSigma()) {
+            returnString += chr + " ";
+        }
+        returnString += "\n";
+        for (DFAState state : states.values()) {
+            returnString += state.toString() + "\t";
+            for( char chr : getSigma() ) {
+                returnString += state.transitions.get(chr).toString() + " ";
+            }
+            returnString += "\n";
+        }
+
+        returnString += "q0 = " + startState + "\n";
+        returnString += "F = { " + String.join(" ", finalStates) + " }\n";
         return returnString;
     }
 
     @Override
     public boolean addTransition(String fromState, String toState, char onSymb) {
-        /* TO - DO */
-        return false;
+        if ( !states.containsKey(fromState) || !states.containsKey(toState) || !sigma.contains(onSymb)) {
+            return false;
+        }
+        states.get(fromState).transitions.put(onSymb, states.get(toState));
+        return true;
+
     }
 
     @Override
@@ -107,13 +138,32 @@ public class DFA implements DFAInterface {
         dfa.addSigma('1');
         dfa.addSigma('0');
 
-        dfa.getSigma();
+        dfa.addState("3");
+        dfa.setFinal("3");
 
-        dfa.addState("a");
-        dfa.addState("b");
+        dfa.addState("0");
+        dfa.setStart("0");
+
+        dfa.addState("1");
+        dfa.addState("2");
+
+        dfa.setFinal("c");
 
         dfa.setStart("a");
-        dfa.setFinal("b");
+        dfa.addState("2");
+
+        dfa.addTransition("0", "1", '0');
+        dfa.addTransition("0", "0", '1');
+        dfa.addTransition("1", "3", '0');
+        dfa.addTransition("1", "2", '1');
+        dfa.addTransition("2", "1", '0');
+        dfa.addTransition("2", "1", '1');
+        dfa.addTransition("3", "3", '0');
+        dfa.addTransition("3", "3", '1');
+
+        dfa.addTransition("3", "a", '1');
+        dfa.addTransition("c", "a", '1');
+        dfa.addTransition("3", "a", '2');
 
         System.out.println(dfa.toString());
         System.out.println();
