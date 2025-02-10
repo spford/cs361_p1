@@ -93,7 +93,7 @@ public class DFA implements DFAInterface {
 
     @Override
     public String toString() {
-        String returnString = "Q = { " + String.join(" ", states.keySet()) + " }\n";
+        String returnString = "Q = {" + String.join(" ", states.keySet()) + "}\n";
         returnString += "Sigma = { ";
         for (Character chr : getSigma()) {
             returnString += chr + " ";
@@ -124,6 +124,7 @@ public class DFA implements DFAInterface {
         }
         states.get(fromState).transitions.put(onSymb, states.get(toState));
         return true;
+
     }
 
     @Override
@@ -134,8 +135,8 @@ public class DFA implements DFAInterface {
 
     public static void main(String[] args) {
         DFA dfa = new DFA();
-        dfa.addSigma('0');
         dfa.addSigma('1');
+        dfa.addSigma('0');
 
         dfa.addState("3");
         dfa.setFinal("3");
@@ -146,8 +147,8 @@ public class DFA implements DFAInterface {
         dfa.addState("1");
         dfa.addState("2");
 
-
         dfa.setFinal("c");
+
         dfa.setStart("a");
         dfa.addState("2");
 
