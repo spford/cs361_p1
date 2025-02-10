@@ -1,16 +1,9 @@
 package fa.dfa;
 
 import fa.State;
-import fa.dfa.DFAInterface;
-import fa.dfa.DFAState;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.HashMap;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * DFA is an implementation that provides all necessary operations to construct
@@ -18,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class DFA implements DFAInterface {
     protected LinkedHashSet<Character> sigma = new LinkedHashSet<>();
-    protected HashMap<String, DFAState> states = new HashMap<>();
-    protected TreeSet<String> finalStates = new TreeSet<String>();
+    protected HashMap<String, DFAState> states = new LinkedHashMap<>();
+    protected TreeSet<String> finalStates = new TreeSet<>();
     protected String startState;
 
     public DFA() {
@@ -33,8 +26,6 @@ public class DFA implements DFAInterface {
         }
         states.put(name, new DFAState(name));
         return true;
-        //states.putIfAbsent(name, new DFAState(name));
-        //return states.get(name).toString().equals(name);
     }
 
     @Override
@@ -93,7 +84,7 @@ public class DFA implements DFAInterface {
 
     @Override
     public String toString() {
-        String returnString = "Q = {" + String.join(" ", states.keySet()) + "}\n";
+        String returnString = "Q = { " + String.join(" ", states.keySet()) + " }\n";
         returnString += "Sigma = { ";
         for (Character chr : getSigma()) {
             returnString += chr + " ";
@@ -113,7 +104,7 @@ public class DFA implements DFAInterface {
         }
 
         returnString += "q0 = " + startState + "\n";
-        returnString += "F = { " + String.join(" ", finalStates) + " }\n";
+        returnString += "F = { " + String.join(" ", finalStates.descendingSet()) + " }\n";
         return returnString;
     }
 
@@ -124,7 +115,6 @@ public class DFA implements DFAInterface {
         }
         states.get(fromState).transitions.put(onSymb, states.get(toState));
         return true;
-
     }
 
     @Override
@@ -135,35 +125,58 @@ public class DFA implements DFAInterface {
 
     public static void main(String[] args) {
         DFA dfa = new DFA();
+        dfa.addSigma('2');
         dfa.addSigma('1');
-        dfa.addSigma('0');
 
-        dfa.addState("3");
-        dfa.setFinal("3");
+        dfa.addState("G");
+        dfa.addState("D");
 
-        dfa.addState("0");
-        dfa.setStart("0");
+        dfa.setFinal("G");
+        dfa.setFinal("D");
 
-        dfa.addState("1");
-        dfa.addState("2");
+        dfa.addState("A");
+        dfa.setStart("D");
+        dfa.setStart("A");
 
-        dfa.setFinal("c");
+        dfa.addState("B");
+        dfa.addState("C");
+        dfa.addState("E");
+        dfa.addState("F");
 
-        dfa.setStart("a");
-        dfa.addState("2");
+        dfa.addState("A");
+        dfa.setFinal("K");
+        dfa.setStart("BK");
 
-        dfa.addTransition("0", "1", '0');
-        dfa.addTransition("0", "0", '1');
-        dfa.addTransition("1", "3", '0');
-        dfa.addTransition("1", "2", '1');
-        dfa.addTransition("2", "1", '0');
-        dfa.addTransition("2", "1", '1');
-        dfa.addTransition("3", "3", '0');
-        dfa.addTransition("3", "3", '1');
+        dfa.addTransition("A", "B", '1');
+        dfa.addTransition("A", "C", '2');
 
-        dfa.addTransition("3", "a", '1');
-        dfa.addTransition("c", "a", '1');
-        dfa.addTransition("3", "a", '2');
+        dfa.addTransition("B", "D", '1');
+        dfa.addTransition("B", "E", '2');
+
+        dfa.addTransition("C", "F", '1');
+        dfa.addTransition("C", "G", '2');
+
+        dfa.addTransition("C", "F", '1');
+        dfa.addTransition("C", "G", '2');
+
+        dfa.addTransition("D", "D", '1');
+        dfa.addTransition("D", "E", '2');
+
+        dfa.addTransition("E", "D", '1');
+        dfa.addTransition("E", "E", '2');
+
+        dfa.addTransition("F", "F", '1');
+        dfa.addTransition("F", "G", '2');
+
+        dfa.addTransition("G", "F", '1');
+        dfa.addTransition("G", "G", '2');
+
+
+        dfa.addTransition("FF", "F", '1');
+        dfa.addTransition("F", "GG", '2');
+
+        dfa.addTransition("G", "F", 'K');
+        dfa.addTransition("A", "K", '7');
 
         System.out.println(dfa.toString());
         System.out.println();
