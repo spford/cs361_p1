@@ -10,7 +10,7 @@ public abstract class State {
 	private String name;
 	
 	public State() {
-		
+
 	}
 	
 	/**
@@ -35,6 +35,4 @@ public abstract class State {
 	public String toString(){
 		return name;
 	}
-	
-	
 }
