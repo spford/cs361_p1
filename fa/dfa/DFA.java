@@ -19,6 +19,21 @@ public class DFA implements DFAInterface {
 
     }
 
+    public DFA(Collection<Character> sigma, HashMap<String, DFAState> states, SortedSet<String> finalStates, String startState) {
+        this.sigma = new LinkedHashSet<>(sigma);
+        for (Map.Entry<String, DFAState> entryState : states.entrySet()) {
+            DFAState deepCopyState = new DFAState(entryState.getKey());
+            for (Map.Entry<Character, State> entryTransition : entryState.getValue().transitions.entrySet()) {
+                State transitionState = entryTransition.getValue();
+                deepCopyState.transitions.put(entryTransition.getKey(), transitionState);
+            }
+
+            this.states.put(entryState.getKey(), deepCopyState);
+        }
+        this.finalStates = new TreeSet<>(finalStates);
+        this.startState = startState;
+    }
+
     @Override
     public boolean addState(String name) {
         if (states.containsKey(name)) {
@@ -119,7 +134,16 @@ public class DFA implements DFAInterface {
 
     @Override
     public DFA swap(char symb1, char symb2) {
-        /* TO - DO */
+        if (sigma.contains(symb1) && sigma.contains(symb2)) {
+            DFA DFACopy = new DFA(sigma, states, finalStates, startState);
+            for (DFAState stateCopy : DFACopy.states.values()) {
+                String toState = stateCopy.transitions.remove(symb1).toString();
+                String fromState = stateCopy.transitions.remove(symb2).toString();
+                DFACopy.addTransition(stateCopy.toString(), toState, symb2);
+                DFACopy.addTransition(stateCopy.toString(), fromState, symb1);
+            }
+            return DFACopy;
+        }
         return null;
     }
 
@@ -179,7 +203,12 @@ public class DFA implements DFAInterface {
         dfa.addTransition("A", "K", '7');
 
         System.out.println(dfa.toString());
-        System.out.println();
+
+        DFA dfaCopy = new DFA(dfa.sigma, dfa.states, dfa.finalStates, dfa.startState);
+        dfaCopy = dfaCopy.swap('1', '2');
+
+        System.out.println(dfa.toString());
+        System.out.println(dfaCopy.toString());
     }
 }
 
