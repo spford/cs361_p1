@@ -34,33 +34,54 @@ public class DFA implements DFAInterface {
         this.startState = startState;
     }
 
+    /** Adds States to a DFA Instance
+     * @param name - the requested name of the state to be added.
+     * @return boolean - true - state does not already exist and was successfully added
+     *                 - false - state was not added. Probably do to the state of 'name' already exists.
+     **/
     @Override
     public boolean addState(String name) {
-        if (states.containsKey(name)) {
+        if (states.containsKey(name)) { //Check the state is not already in the state set
             return false;
         }
-        states.put(name, new DFAState(name));
+        states.put(name, new DFAState(name)); //Add new DFAState object to state set
         return true;
     }
 
+
+    /** Adds existing state to a final state set
+     * @param name - the name of the state to be added to final state set
+     * @return boolean - true - specified state was successfully added to final state set
+     *                 - false - specified state not added to final state set
+     **/
     @Override
     public boolean setFinal(String name) {
-        if (states.containsKey(name)) {
-            finalStates.add(name);
+        if (states.containsKey(name)) { //Check the state is already in the state set
+            finalStates.add(name);      //Adds the valid state to the final state set
             return true;
         }
         return false;
     }
 
+    /** Sets existing state as the start state
+     * @param name - the name of the state to be made the start state
+     * @return boolean - true - specified state was successfully made the start state
+     *                 - false - specified state not made the start state
+     **/
     @Override
     public boolean setStart(String name) {
-        if (states.containsKey(name)) {
-            startState = name;
+        if (states.containsKey(name)) { //Check the state is already in the state set
+            startState = name;          //Makes valid state the start state
             return true;
         }
         return false;
     }
 
+    /** Adds existing state to a final state set
+     * @param name - the name of the state to be added to final state set
+     * @return boolean - true - specified state was successfully added to final state set
+     *                 - false - specified state not added to final state set
+     **/
     @Override
     public boolean accepts(String s) {
         DFAState currentState = states.get(startState);
