@@ -32,7 +32,9 @@ Luis Acosta
 
 ## Compiling and Using
 
-
+javac -cp .:/usr/share/java/junit.jar ./test/dfa/DFATest.java
+java -cp .:/usr/share/java/junit.jar:/usr/share/java/hamcrest/core/jar
+org.junit.runner.JUnitCore test.dfa.DFATest
 
 ## Sources used
 
