@@ -1,41 +1,29 @@
-# Project #: Project Name
+# Project 1: Deterministic Finite Automata
 
-* Author: Your Name
-* Class: CS121 Section #
-* Semester: Fall 2022
+* Author: Spencer Ford, Luis Acosta
+* Class: CS361 Section #001
+* Semester: Spring 2025
 
 ## Overview
 
-Concisely explain what the program does. If this exceeds a couple of
-sentences, you're going too far. Generally you should be pulling this
-right from the project specification. Please don't just cut and
-paste, but paraphrase what is stated in the project specification.
+This program implements DFA and FA interfaces making it possible to create deterministic finite automata.
+After these machines are made the user can use this program to see if any string is in the language described
+by the DFA.
 
 ## Reflection
 
-Write a brief (2-3 paragraph) reflection describing your experience with this 
-project. Answer the following questions (but feel free to add other insights): 
-- What worked well and what was a struggle?
-- What concepts still aren't quite clear?
-- What techniques did you use to make your code easy to debug and modify?
-- What would you change about your design process?
-- If you could go back in time, what would you tell yourself about doing this project?
+We first started by implementing the DFA and FA interfaces in DFA.java. During this process we had to change the
+type of storage objects we used to create the 5-tuple in memory because of the objectives and scope of this project.
+Overall we feel as though this project came together in a straight forward manner and were able to accomplish the brief
+in a timely manner.
+
 
 ## Compiling and Using
 
-This section should tell the user how to compile your code.  It is
-also appropriate to instruct the user how to use your code. Does your
-program require user input? If so, what does your user need to know
-about it to use it as quickly as possible?
+
 
 ## Sources used
 
-If you used any sources outside of the lecture notes, class lab files,
-or text book you need to list them here. If you looked something up on
-stackoverflow.com and fail to cite it in this section it will be
-considered plagiarism and be dealt with accordingly. So be safe CITE!
+We used Oracles website to find the best data structures to implement the appropriate interfaces.
 
 ----------
-This README template is using Markdown. To preview your README output,
-you can copy your file contents to a Markdown editor/previewer such
-as [https://stackedit.io/editor](https://stackedit.io/editor).
