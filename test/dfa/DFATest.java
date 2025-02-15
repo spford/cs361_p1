@@ -131,7 +131,7 @@ public class DFATest {
 		System.out.println("dfa1Swap accept pass");
 	}
 
-//------------------- dfaI tests ----------------------//
+//------------------- dfa2 tests ----------------------//
 	private DFA dfa2() {
 		DFA dfa = new DFA();
 		dfa.addSigma('0');
@@ -540,6 +540,7 @@ public class DFATest {
 		System.out.println("dfa4Swap accept pass");
 	}
 
+	//------------------- dfa5 tests ----------------------//
 	private DFA dfa5() {
 		DFA dfa = new DFA();
 		dfa.addSigma('0');
@@ -670,6 +671,7 @@ public class DFATest {
 		System.out.println("dfa5Swap accept pass");
 	}
 
+	//------------------- dfa6 tests ----------------------//
 	private DFA dfa6() {
 		DFA dfa = new DFA();
 		dfa.addSigma('0');
@@ -816,7 +818,7 @@ public class DFATest {
 		System.out.println("dfa6Swap accept pass");
 	}
 
-	//------------------- dfa1 tests ----------------------//
+	//------------------- dfa7 tests ----------------------//
 	private DFA dfa7() {
 		DFA dfa = new DFA();
 		dfa.addSigma('1');
@@ -933,7 +935,7 @@ public class DFATest {
 		System.out.println("dfa7Swap accept pass");
 	}
 
-	//------------------- dfaI tests ----------------------//
+	//------------------- dfa8 tests ----------------------//
 	private DFA dfa8() {
 		DFA dfa = new DFA();
 		dfa.addSigma('1');
@@ -1057,7 +1059,7 @@ public class DFATest {
 		System.out.println("dfa8Swap accept pass");
 	}
 
-	//------------------- dfa8 tests ----------------------//
+	//------------------- dfa9 tests ----------------------//
 	private DFA dfa9() {
 		DFA dfa = new DFA();
 		dfa.addSigma('1');
@@ -1567,6 +1569,271 @@ public class DFATest {
 
 		System.out.println("dfa12Swap accept pass");
 	}
-	
+
+	//------------------- dfa13 tests ----------------------//
+	private DFA dfa13() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("a"));
+		assertTrue(dfa.addState("b"));
+		assertTrue(dfa.addState("c"));
+		assertTrue(dfa.addState("d"));
+		assertTrue(dfa.addState("e"));
+		assertTrue(dfa.setStart("a"));
+		assertTrue(dfa.setFinal("e"));
+		assertTrue(dfa.setFinal("c"));
+
+		assertFalse(dfa.addState("a"));
+		assertFalse(dfa.setStart("f"));
+		assertFalse(dfa.setFinal("f"));
+
+		assertTrue(dfa.addTransition("a", "b", '0'));
+		assertTrue(dfa.addTransition("a", "d", '1'));
+		assertTrue(dfa.addTransition("b", "c", '0'));
+		assertTrue(dfa.addTransition("b", "b", '1'));
+		assertTrue(dfa.addTransition("c", "c", '0'));
+		assertTrue(dfa.addTransition("c", "c", '1'));
+		assertTrue(dfa.addTransition("d", "d", '0'));
+		assertTrue(dfa.addTransition("d", "e", '1'));
+		assertTrue(dfa.addTransition("e", "e", '0'));
+		assertTrue(dfa.addTransition("e", "e", '1'));
+
+		assertFalse(dfa.addTransition("c", "b", '9'));
+		assertFalse(dfa.addTransition("a", "z", '1'));
+		assertFalse(dfa.addTransition("z", "b", '2'));
+
+		return dfa;
+	}
+
+	@Test
+	public void test13_1() {
+		DFA dfa = dfa13();
+		System.out.println("dfa13 instantiation pass");
+	}
+
+	@Test
+	public void test13_2() {
+		DFA dfa = dfa13();
+		assertNotNull(dfa.getState("a"));
+		assertEquals(dfa.getState("a").getName(),"a");
+		assertTrue(dfa.isStart("a"));
+		assertNotNull(dfa.getState("b"));
+		assertEquals(dfa.getState("b").getName(),"b");
+		assertTrue(dfa.isFinal("c"));
+		assertTrue(dfa.isFinal("e"));
+		assertEquals(dfa.getSigma(), Set.of('0','1'));
+
+		System.out.println("dfa13 correctness pass");
+	}
+
+	@Test
+	public void test13_3() {
+		DFA dfa = dfa13();
+
+		assertFalse(dfa.accepts("0"));
+		assertTrue(dfa.accepts("00"));
+		assertTrue(dfa.accepts("11"));
+		assertFalse(dfa.accepts("10"));
+		assertTrue(dfa.accepts("0101"));
+		assertTrue(dfa.accepts("1010"));
+		assertFalse(dfa.accepts("f"));
+
+		System.out.println("dfa13 accept pass");
+	}
+
+	@Test
+	public void test13_4() {
+		DFA dfa = dfa13();
+
+		String dfaStr = dfa.toString();
+		String expStr = " Q = { a b c d e }\n"
+				+ "Sigma = { 0 1 }\n"
+				+ "delta =\n"
+				+ "		0	1\n"
+				+ "	a	b	d\n"
+				+ "	b	c	b\n"
+				+ "	c	c	c\n"
+				+ "	d	d	e\n"
+				+ "	e	e	e\n"
+				+ "q0 = a\n"
+				+ "F = { e c }";
+
+		assertTrue(dfaStr.replaceAll("\\s", "").equals(expStr.replaceAll("\\s", "")));
+
+		System.out.println("dfa13 toString pass");
+	}
+
+	@Test
+	public void test13_5() {
+		DFA dfa = dfa13();
+		DFA dfaSwap = dfa.swap('1', '0');
+
+		//different DFA objects
+		assertTrue(dfa != dfaSwap);
+
+		//different state objects
+		assertTrue(dfa.getState("a") != dfaSwap.getState("a"));
+		assertTrue(dfa.getState("b") != dfaSwap.getState("b"));
+		assertEquals(dfa.isStart("a"), dfaSwap.isStart("a"));
+
+		//the transitions of the original dfa should not change
+		assertFalse(dfa.accepts("0"));
+		assertTrue(dfa.accepts("00"));
+		assertTrue(dfa.accepts("11"));
+		assertFalse(dfa.accepts("10"));
+		assertTrue(dfa.accepts("0101"));
+		assertTrue(dfa.accepts("1010"));
+		assertFalse(dfa.accepts("f"));
+
+		System.out.println("dfa13Swap instantiation pass");
+	}
+
+	@Test
+	public void test13_6() {
+		DFA dfa = dfa13();
+		DFA dfaSwap = dfa.swap('1', '0');
+		assertFalse(dfaSwap.accepts("1"));
+		assertTrue(dfaSwap.accepts("11"));
+		assertTrue(dfaSwap.accepts("00"));
+		assertFalse(dfaSwap.accepts("01"));
+		assertTrue(dfaSwap.accepts("1010"));
+		assertTrue(dfaSwap.accepts("0101"));
+		assertFalse(dfaSwap.accepts("f"));
+
+		System.out.println("dfa13Swap accept pass");
+	}
+
+	//------------------- dfa14 tests ----------------------//
+	private DFA dfa14() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("a"));
+		assertTrue(dfa.addState("b"));
+		assertTrue(dfa.addState("c"));
+		assertTrue(dfa.addState("d"));
+		assertTrue(dfa.addState("e"));
+		assertTrue(dfa.setStart("a"));
+		assertTrue(dfa.setFinal("e"));
+
+		assertFalse(dfa.addState("a"));
+		assertFalse(dfa.setStart("f"));
+		assertFalse(dfa.setFinal("f"));
+
+		assertTrue(dfa.addTransition("a", "b", '0'));
+		assertTrue(dfa.addTransition("a", "c", '1'));
+		assertTrue(dfa.addTransition("b", "a", '0'));
+		assertTrue(dfa.addTransition("b", "a", '1'));
+		assertTrue(dfa.addTransition("c", "e", '0'));
+		assertTrue(dfa.addTransition("c", "d", '1'));
+		assertTrue(dfa.addTransition("d", "c", '0'));
+		assertTrue(dfa.addTransition("d", "c", '1'));
+		assertTrue(dfa.addTransition("e", "e", '0'));
+		assertTrue(dfa.addTransition("e", "e", '1'));
+
+		assertFalse(dfa.addTransition("c", "b", '9'));
+		assertFalse(dfa.addTransition("a", "z", '1'));
+		assertFalse(dfa.addTransition("z", "b", '2'));
+
+		return dfa;
+	}
+
+	@Test
+	public void test14_1() {
+		DFA dfa = dfa14();
+		System.out.println("dfa14 instantiation pass");
+	}
+
+	@Test
+	public void test14_2() {
+		DFA dfa = dfa14();
+		assertNotNull(dfa.getState("a"));
+		assertEquals(dfa.getState("a").getName(),"a");
+		assertTrue(dfa.isStart("a"));
+		assertNotNull(dfa.getState("b"));
+		assertEquals(dfa.getState("b").getName(),"b");
+		assertTrue(dfa.isFinal("e"));
+		assertEquals(dfa.getSigma(), Set.of('0','1'));
+
+		System.out.println("dfa14 correctness pass");
+	}
+
+	@Test
+	public void test14_3() {
+		DFA dfa = dfa14();
+
+		assertFalse(dfa.accepts("0"));
+		assertTrue(dfa.accepts("10"));
+		assertFalse(dfa.accepts("01"));
+		assertTrue(dfa.accepts("100001"));
+		assertTrue(dfa.accepts("1100"));
+		assertFalse(dfa.accepts("f"));
+
+		System.out.println("dfa14 accept pass");
+	}
+
+	@Test
+	public void test14_4() {
+		DFA dfa = dfa14();
+
+		String dfaStr = dfa.toString();
+		String expStr = " Q = { a b c d e }\n"
+				+ "Sigma = { 0 1 }\n"
+				+ "delta =\n"
+				+ "		0	1\n"
+				+ "	a	b	c\n"
+				+ "	b	a	a\n"
+				+ "	c	e	d\n"
+				+ "	d	c	c\n"
+				+ "	e	e	e\n"
+				+ "q0 = a\n"
+				+ "F = { e }";
+
+		assertTrue(dfaStr.replaceAll("\\s", "").equals(expStr.replaceAll("\\s", "")));
+
+		System.out.println("dfa14 toString pass");
+	}
+
+	@Test
+	public void test14_5() {
+		DFA dfa = dfa14();
+		DFA dfaSwap = dfa.swap('1', '0');
+
+		//different DFA objects
+		assertTrue(dfa != dfaSwap);
+
+		//different state objects
+		assertTrue(dfa.getState("a") != dfaSwap.getState("a"));
+		assertTrue(dfa.getState("b") != dfaSwap.getState("b"));
+		assertEquals(dfa.isStart("a"), dfaSwap.isStart("a"));
+
+		//the transitions of the original dfa should not change
+		assertFalse(dfa.accepts("0"));
+		assertTrue(dfa.accepts("10"));
+		assertFalse(dfa.accepts("01"));
+		assertTrue(dfa.accepts("100001"));
+		assertTrue(dfa.accepts("1100"));
+		assertFalse(dfa.accepts("f"));
+
+		System.out.println("dfa14Swap instantiation pass");
+	}
+
+	@Test
+	public void test14_6() {
+		DFA dfa = dfa14();
+		DFA dfaSwap = dfa.swap('1', '0');
+		assertFalse(dfaSwap.accepts("1"));
+		assertTrue(dfaSwap.accepts("01"));
+		assertFalse(dfaSwap.accepts("10"));
+		assertTrue(dfaSwap.accepts("0111110"));
+		assertTrue(dfaSwap.accepts("0011"));
+		assertFalse(dfaSwap.accepts("f"));
+
+		System.out.println("dfa14Swap accept pass");
+	}
+
 }
 
