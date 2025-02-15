@@ -193,15 +193,21 @@ public class DFA implements DFAInterface {
         return true;
     }
 
+    /** Returns this DFA object with specified transition swaps
+     *
+     * @param   symb1 - character swap
+     *          sybm2 - character swap
+     * @return DFA -
+     **/
     @Override
     public DFA swap(char symb1, char symb2) {
-        if (sigma.contains(symb1) && sigma.contains(symb2)) {
-            DFA DFACopy = new DFA(sigma, states, finalStates, startState);
-            for (DFAState stateCopy : DFACopy.states.values()) {
-                String toState = stateCopy.transitions.remove(symb1).toString();
-                String fromState = stateCopy.transitions.remove(symb2).toString();
-                DFACopy.addTransition(stateCopy.toString(), toState, symb2);
-                DFACopy.addTransition(stateCopy.toString(), fromState, symb1);
+        if (sigma.contains(symb1) && sigma.contains(symb2)) {               //Checks both symbols exist in the language
+            DFA DFACopy = new DFA(sigma, states, finalStates, startState);  //Creates new DFA object copy of this DFA
+            for (DFAState stateCopy : DFACopy.states.values()) {            //Iterates over every state in DFA
+                String toState = stateCopy.transitions.remove(symb1).toString();    //Remove old transition on symb1 and save
+                String fromState = stateCopy.transitions.remove(symb2).toString();  //Remove old transition on symb2 and save
+                DFACopy.addTransition(stateCopy.toString(), toState, symb2);        //Add new transition to toState on symb2
+                DFACopy.addTransition(stateCopy.toString(), fromState, symb1);      //Add new transition to fromState on symb1
             }
             return DFACopy;
         }
